@@ -7,9 +7,28 @@ import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import './index.less';
 
 export default class RichEditor extends Component {
-    state = {
-        editorState: EditorState.createEmpty(),
-    }
+		constructor(props) {
+	    super(props);
+			this.state = {
+				editorState:EditorState.createEmpty(),
+			};
+	  }
+
+
+		componentWillReceiveProps(nextProps){
+			console.log('nextProps',nextProps,this.props)
+			if(nextProps.editorConetent == this.props.editorConetent) return ;
+			const html = nextProps.editorConetent;
+			const contentBlock = htmlToDraft(html);
+			if (contentBlock) {
+				const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
+				const editorState = EditorState.createWithContent(contentState);
+				this.state = {
+					editorState,
+				};
+			}
+
+		}
 
     onEditorStateChange=(editorState) => {
         this.setState({
@@ -22,6 +41,8 @@ export default class RichEditor extends Component {
 
     render() {
         const { editorState } = this.state;
+
+				console.log('editorState',convertToRaw(editorState.getCurrentContent()))
         return (
             <div>
                 <Editor

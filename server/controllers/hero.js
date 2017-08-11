@@ -1,4 +1,5 @@
 import fs from 'fs';
+import path from 'path';
 import formidable from 'formidable';
 
 import {db, ObjectID}  from './../common/db'
@@ -25,25 +26,49 @@ export const search = (req, res, next) => {
 }
 
 export const getHeroList = (req, res, next) => {
-    const category = req.query.category
+	  console.log('=========',req.body)
+		//const params = req.body.id ? {_id:ObjectID(req.body.id)} :{}
 
+		if(req.body.id){
+			db.collection('heroes')
+	        .findOne({_id:ObjectID(req.body.id)},(err, result)=>{
+						if (err) throw err;
+						console.log(result)
+						res.send({rs:'ok',msg:'成功',data: result});
+					})
+
+		}else{
+			db.collection('heroes')
+	        .find({})
+	        .toArray((err, result) => {
+	            if (err) throw err;
+	            const resultArr = [];
+	            console.log(result)
+	            result.forEach((item) => {
+	                const timestamp = item._id.getTimestamp()
+	                item.createTime = getFormatTime(timestamp)
+	                resultArr.push(item)
+	            })
+	            res.send({rs:'ok',msg:'成功',data: resultArr});
+	        });
+		}
+
+}
+
+export const deleteHeroList = (req, res, next) => {
+
+		const id = req.body.id
     db.collection('heroes')
-        .find({})
-        .toArray((err, result) => {
+        .remove({_id: ObjectID(id)}, (err, result) => {
             if (err) throw err;
-            const resultArr = [];
-            console.log(result)
-            result.forEach((item) => {
-                const timestamp = item._id.getTimestamp()
-                item.createTime = getFormatTime(timestamp)
-                resultArr.push(item)
-            })
-            res.send({rs:'ok',msg:'成功',data: resultArr});
+						// db.collection('heroes').findOne({_id: ObjectID(id)},(err,result))
+						// console.log('删除',result)
+						//fs.unlink();
+            res.send({rs: 'ok',msg:'成功'});
         });
 }
 
-{
-}
+
 
 export const list = (req, res, next) => {
     db.collection('articles')
@@ -110,23 +135,26 @@ export const update = (req, res, next) => {
         });
 }
 
-export const articleUpdate = (req, res, next) => {
-    // POST 请求在req.body中取值
-    //GET 请求在req.query中取值
-    const {id, title, author, category, content, img} = req.body
-    db.collection('articles')
+export const updateHeroList = (req, res, next) => {
+    const {id,name,alias,title, content, final, rank, photolist, scope, skill, star} = req.body
+    db.collection('heroes')
         .update({_id: ObjectID(id)}, {
             $set: {
-                title,
-                author,
-                category,
-                content,
-                img,
+							name,
+							alias,
+							title,
+							content,
+							final,
+							rank,
+							photolist,
+							scope,
+							skill,
+							star,
             }
         }, (err, result) => {
             if (err) throw err;
             //注意 最后返回的结果 是res.send()方法
-            res.send({rs: 'ok'});
+            res.send({rs: 'ok',msg:'成功'});
         });
 }
 
@@ -179,13 +207,4 @@ export const uploadPhoto = (req, res, next) => {
         }
     })
 
-}
-
-export const remove = (req, res, next) => {
-    const id = req.body.id
-    db.collection('articles')
-        .remove({_id: ObjectID(id)}, (err, result) => {
-            if (err) throw err;
-            res.send({rs: 'ok'});
-        });
 }

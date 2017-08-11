@@ -6,7 +6,7 @@ import session from 'express-session';
 import flash from 'connect-flash';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
-import configRouter from './config/router'
+import Controllers from './controllers'
 import {sessionConfig} from './config/session' ;
 import ueditor from "ueditor";
 const MongoStore = require('connect-mongo')(session);
@@ -24,7 +24,9 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
+//设置多个静态资源目录
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, '../dist')));
 
 
 // session 中间件
@@ -77,7 +79,7 @@ app.use(function (req, res, next) {
 // }));
 
 
-configRouter(app)
+Controllers(app)
 
 
 

@@ -1,46 +1,20 @@
-import express from 'express';
-import async from 'async';
-import {db,ObjectID}  from './../common/db'
-import { getFormatTime } from './../utils/utils'
-const router = express.Router();
+import * as Hero from './hero';
+import fs from 'fs';
+import path from 'path';
 
-export const index = (req, res, next)=> {
-  console.log('=====session',req.session.isLogin)
-  //串行无关联
-  async.series({
-    one:function(callback){
-      db.collection('articles').find({}).toArray((err, result)=>{
-        if (err) throw err;
-        result.map((item)=>{
-          const timestamp = item._id.getTimestamp()
-          item.createTime = getFormatTime(timestamp)
-        })
-        callback(null,result)
-      });
-    },
-    two:function(callback){
-      db.collection('comments')
-        .aggregate({$group:{_id:"$arId",comments_num:{$sum:1}}},(err,result)=>{
-        if(err) throw err;
-        callback(null,result)
-      })
-    }
-  },(err,result)=>{
-    const {one,two} = result
-
-    const finalResult =  one.map((item,index)=>Object.assign(item,two[index]))
-
-    res.render('index', { articles: finalResult});
-
+export default (app)=>{
+  // pre handle user
+  app.get('/',function(req, res, next) {
+		  const html = fs.readFileSync(path.join(__dirname,'../../dist/index.html'))
+      res.render('index',{html})
   })
-}
 
-export const likes = (req, res, next)=>{
-  const { id, likes } = req.body
-  db.collection('articles')
-    .update({_id:ObjectID(id)},{$set:{likes:likes}},(err, result)=>{
-      if (err) throw err;
-      res.send({rs:true,likes:likes});
-    });
+  app.post('/api/upload/photo',Hero.uploadPhoto)
+  // app.get('/', AppIndex.index);
+  app.post('/api/insertHeroInfo', Hero.insertHeroInfo);
+
+  app.post('/api/getHeroList', Hero.getHeroList);
+	app.post('/api/deleteHeroList', Hero.deleteHeroList);
+	app.post('/api/updateHeroList', Hero.updateHeroList);
 
 }
