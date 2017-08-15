@@ -22,7 +22,7 @@ const TabPane     = Tabs.TabPane;
 import {myAxios} from 'utils'
 import HeroList from './HeroList'
 import CreateFormBox from './Create'
-import EditFormBox from './Edit'
+
 
 
 function RenderPagePane(props){
@@ -35,9 +35,6 @@ function RenderPagePane(props){
 		return <CreateFormBox />
 	}
 
-	if(status === '2'){
-		return <EditFormBox editID={props.editID} />
-	}
 }
 
 export default class HeroInfoManage extends Component {
@@ -71,7 +68,6 @@ export default class HeroInfoManage extends Component {
                     <RadioGroup defaultValue="0" value={pageStatus} size="large" onChange={this.handleChange}>
 												<RadioButton value="0">查看列表</RadioButton>
                         <RadioButton value="1">创建</RadioButton>
-                        <RadioButton value="2" disabled>编辑</RadioButton>
                     </RadioGroup>
                 </div>
                 <div className="leftpane-section-body">

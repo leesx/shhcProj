@@ -4,9 +4,16 @@ import path from 'path';
 
 export default (app)=>{
   // pre handle user
-  app.get('/',function(req, res, next) {
-		  const html = fs.readFileSync(path.join(__dirname,'../../dist/index.html'))
-      res.render('index',{html})
+  app.get('*',function(req, res, next) {
+		try{
+			const html = process.env.NODE_ENV === 'development' ? renderHtml() : fs.readFileSync(path.join(__dirname,'../../dist/index.html'))
+
+			res.render('index',{html})
+		}catch(err){
+			console.error(err)
+			next()
+		}
+
   })
 
   app.post('/api/upload/photo',Hero.uploadPhoto)
@@ -17,4 +24,34 @@ export default (app)=>{
 	app.post('/api/deleteHeroList', Hero.deleteHeroList);
 	app.post('/api/updateHeroList', Hero.updateHeroList);
 
+}
+
+function renderHtml(){
+	return `
+		<!doctype html>
+		<html>
+			<head>
+				<title>水浒画册</title>
+				<meta charset="utf-8" />
+				<meta name="keywords" content="react,react-router,immutablejs,loadsh.js,es2015,webpack3.0" />
+				<meta name="description"  content="this is a react project,only study" />
+				<style>
+
+				</style>
+				<script defer src="//at.alicdn.com/t/font_13r0wp30od97wrk9.js"></script>
+			</head>
+			<body>
+
+				<div id="root">
+
+				</div>
+
+				<script  async src="https://cdn.bootcss.com/babel-polyfill/6.22.0/polyfill.min.js"></script>
+				<script src="http://192.168.4.233:3031/dist/scripts/common/vendor.js"></script>
+				<script  src="http://192.168.4.233:3031/dist/scripts/index.js"></script></body>
+
+			</body>
+		</html>
+
+		`
 }

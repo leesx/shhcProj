@@ -19,7 +19,7 @@ const RadioButton = Radio.Button;
 const RadioGroup  = Radio.Group;
 const TabPane     = Tabs.TabPane;
 
-import {myAxios} from 'utils'
+import {myAxios,notice} from 'utils'
 import HeroList from './HeroList'
 
 class FormBox extends React.Component {
@@ -47,7 +47,7 @@ class FormBox extends React.Component {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                const photolist = values.photo.map((item) => {
+                const photolist = values.photo && values.photo.map((item) => {
                     return {
                         url     : item.response,
                         thumbUrl: item.thumbUrl,
@@ -64,7 +64,7 @@ class FormBox extends React.Component {
 											this.setState({
 												loading:false
 											})
-											message.success('保存成功')
+											notice('success',{msg:'提示',desc:'保存成功'})
 										}
                 }).catch((err) => {
 									this.setState({
@@ -82,7 +82,7 @@ class FormBox extends React.Component {
         }
         return e && e.fileList;
     }
-    getgetEditorContent = (content) => {
+    getEditorContent = (content) => {
         this.setState({
             editorContent: content,
         })
@@ -228,9 +228,9 @@ class FormBox extends React.Component {
                 >
                     {getFieldDecorator('content', {
                         valuePropName    : 'fileList',
-                        getValueFromEvent: this.getgetEditorContent,
+                        getValueFromEvent: this.getEditorContent,
                     })(
-                        <RichEditor getEditorContent={this.getgetEditorContent}/>
+                        <RichEditor getEditorContent={this.getEditorContent}/>
                     )}
                 </FormItem>
 

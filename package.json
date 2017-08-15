@@ -1,10 +1,10 @@
 {
-  "name": "Yunpad",
+  "name": "shuihuhuace",
   "version": "1.0.0",
   "description": "In the YunPad project using the react technology stack.",
   "main": "index.js",
   "scripts": {
-    "server": "cross-env BABEL_ENV=production NODE_ENV=development nodemon ./server/bin/www --exec babel-node  --presets es2015,stage-0",
+    "server": "cross-env BABEL_ENV=development NODE_ENV=development nodemon ./server/bin/www --exec babel-node  --presets es2015,stage-0",
     "dll:dev": "cross-env NODE_ENV=development webpack --config webpack.config.dll.js",
     "dll:prod": "cross-env NODE_ENV=production webpack --config webpack.config.dll.js",
     "dll": "npm run dll:dev && npm run dll:prod",

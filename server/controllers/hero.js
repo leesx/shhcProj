@@ -28,7 +28,8 @@ export const search = (req, res, next) => {
 export const getHeroList = (req, res, next) => {
 	  console.log('=========',req.body)
 		//const params = req.body.id ? {_id:ObjectID(req.body.id)} :{}
-
+    const {currentPage=0,pageSize=5} = req.body
+    //编辑
 		if(req.body.id){
 			db.collection('heroes')
 	        .findOne({_id:ObjectID(req.body.id)},(err, result)=>{
@@ -38,19 +39,30 @@ export const getHeroList = (req, res, next) => {
 					})
 
 		}else{
-			db.collection('heroes')
-	        .find({})
-	        .toArray((err, result) => {
-	            if (err) throw err;
-	            const resultArr = [];
-	            console.log(result)
-	            result.forEach((item) => {
-	                const timestamp = item._id.getTimestamp()
-	                item.createTime = getFormatTime(timestamp)
-	                resultArr.push(item)
-	            })
-	            res.send({rs:'ok',msg:'成功',data: resultArr});
-	        });
+      //获取列表
+      console.log('total','======================')
+      const total = db.collection('heroes').count(function(err,total){
+        if (err) throw err;
+				db.collection('heroes')
+		        .find({})
+	          .skip((currentPage-1)*pageSize)
+	          .limit(pageSize*1)
+		        .toArray((err, result) => {
+		            if (err) throw err;
+		            // const resultArr = [];
+		            // console.log(result)
+		            // result.forEach((item) => {
+		            //     const timestamp = item._id.getTimestamp()
+		            //     item.createTime = getFormatTime(timestamp)
+		            //     resultArr.push(item)
+		            // })
+		            res.send({rs:'ok',msg:'成功',total,currentPage,data: result});
+		        });
+      });
+
+
+
+
 		}
 
 }

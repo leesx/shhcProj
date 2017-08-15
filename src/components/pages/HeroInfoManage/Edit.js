@@ -19,7 +19,7 @@ const RadioButton = Radio.Button;
 const RadioGroup  = Radio.Group;
 const TabPane     = Tabs.TabPane;
 
-import {myAxios} from 'utils'
+import {myAxios,notice} from 'utils'
 import HeroList from './HeroList'
 
 class FormBox extends React.Component {
@@ -60,7 +60,6 @@ class FormBox extends React.Component {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
-							console.log('values',values)
                 const photolist = values.photo.map((item) => {
                     return {
                         url     : item.response,
@@ -72,13 +71,12 @@ class FormBox extends React.Component {
 								this.setState({
 									loading:true
 								})
-								console.log('params',params)
                 myAxios.post('/api/updateHeroList', params).then((data) => {
 									if(data.rs==='ok'){
 										this.setState({
 											loading:false
 										})
-										message.success('修改成功')
+										notice('success',{msg:'提示',desc:'修改成功'})
 									}
                 }).catch((err) => {
 									this.setState({
@@ -96,7 +94,7 @@ class FormBox extends React.Component {
         }
         return e && e.fileList;
     }
-    getgetEditorContent = (content) => {
+    getEditorContent = (content) => {
         this.setState({
             editorContent: content,
         })
@@ -260,7 +258,7 @@ class FormBox extends React.Component {
                     label="英雄介绍"
                 >
                     {getFieldDecorator('content', {})(
-                        <RichEditor editorConetent={editData.content} getEditorContent={this.getgetEditorContent}/>
+                        <RichEditor editorConetent={editData.content} getEditorContent={this.getEditorContent}/>
                     )}
                 </FormItem>
 
@@ -275,4 +273,81 @@ class FormBox extends React.Component {
 }
 
 const EditFormBox = Form.create()(FormBox);
-export default EditFormBox;
+
+
+
+export default class EditFormBoxModal extends Component{
+	constructor(props){
+		super(props)
+		this.state={
+			loading:false,
+			visible:props.visible,
+			editID:null,
+		}
+	}
+	componentDidMount(){
+		// console.log('diidd=================',this.props)
+		// this.setState({
+		// 	visible:this.props.visible
+		// })
+	}
+	componentWillReceiveProps(nextProps,nextState){
+		console.log('---------------------------')
+		this.setState({
+			visible:nextProps.visible,
+			editID:nextProps.editID,
+		})
+	}
+	handleOk=(e)=>{
+		//new FormBox().handleSubmit(e)
+		this.refs.editDom.validateFields((err,values)=>{
+			const photolist = values.photo.map((item) => {
+					return {
+							url     : item.response,
+							thumbUrl: item.thumbUrl,
+					}
+			});
+			const params = Object.assign(values, {photolist, content: this.state.editorContent});
+			params.id = this.props.editID;
+			this.setState({
+				loading:true
+			})
+			myAxios.post('/api/updateHeroList', params).then((data) => {
+				if(data.rs==='ok'){
+					this.setState({
+						loading:false,
+						visible:false,
+					})
+					notice('success',{msg:'提示',desc:'修改成功'})
+				}
+			}).catch((err) => {
+				this.setState({
+					loading:false
+				})
+			})
+		})
+		console.log(this.refs.editDom)
+	}
+	handleCancel=()=>{
+		this.setState({
+			visible:false
+		})
+	}
+	render(){
+		const {loading,visible,editID} = this.state
+		return (
+			<Modal title="编辑"
+				visible={visible}
+				width={1000}
+				height={500}
+				confirmLoading={loading}
+				onOk={this.handleOk}
+				onCancel={this.handleCancel}
+			>
+				<div style={{maxHeight:500,overflow:'auto'}}>
+					<EditFormBox ref="editDom" editID={editID} />
+				</div>
+			</Modal>
+		)
+	}
+};

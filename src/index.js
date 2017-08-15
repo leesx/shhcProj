@@ -14,8 +14,8 @@ import Home from 'components/pages/common/Home';
 
 //DEMO
 import HeroInfoManage from 'components/pages/HeroInfoManage';
-import Demo2 from 'components/pages/bindDemo/Demo2';
-import Demo3 from 'components/pages/bindDemo/Demo3';
+import BgMiuscManage from 'components/pages/BgMiuscManage';
+import StoryManage from 'components/pages/StoryManage';
 
 
 
@@ -46,8 +46,8 @@ ReactDOM.render((
             <Route path="home" component={Home}/>
             <Route path="/shuihu">
                 <Route path="hero/list" component={HeroInfoManage}/>
-                <Route path="music/list" component={Demo2}/>
-                <Route path="story/list" component={Demo3}/>
+                <Route path="music/list" component={BgMiuscManage}/>
+                <Route path="story/list" component={StoryManage}/>
             </Route>
 
         </Route>

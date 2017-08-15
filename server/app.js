@@ -26,7 +26,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 //设置多个静态资源目录
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.static(path.join(__dirname, '../dist')));
+if(process.env.NODE_ENV === 'production'){
+	app.use(express.static(path.join(__dirname, '../dist')));
+}
 
 
 // session 中间件
