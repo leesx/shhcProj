@@ -3,10 +3,10 @@
  */
 
 import React,{Component} from 'react';
-import {Table,Button,Popconfirm,Pagination,Modal} from 'antd'
-import {myAxios} from 'utils'
+import {Table,Button,Popconfirm,Pagination,Modal} from 'antd';
+import {myAxios,notice} from 'utils';
 
-import EditFormBoxModal from './Edit'
+import EditFormBox from './Edit'
 
 function cleanHTMLTag(str=''){
 	if(str === null) str ="";
@@ -89,7 +89,9 @@ export default class HeroList extends Component{
 					pageSize:5, //每页多少条
 					currentPage:1,//当前页码
 					total:null,
-					loading:false,
+					dataLoading:false,
+					confirmLoading:false,
+					editID:null,
 	    }
 			this.columns = setColumns(this)
 		}
@@ -97,10 +99,10 @@ export default class HeroList extends Component{
     componentDidMount(){
         this.fetchData()
     }
-    fetchData(){
+    fetchData=()=>{
 			const {currentPage,pageSize} = this.state
 			this.setState({
-				loading:true
+				dataLoading:true
 			})
         myAxios.post('/api/getHeroList',{
 					currentPage,
@@ -112,13 +114,13 @@ export default class HeroList extends Component{
 	                {
 	                    dataSource:data.data,
 											total:data.total,
-											loading:false,
+											dataLoading:false,
 	                }
 	            )
 						}else{
 							this.setState(
 	                {
-											loading:false,
+											dataLoading:false,
 	                }
 	            )
 						}
@@ -126,7 +128,7 @@ export default class HeroList extends Component{
         }).catch((err) => {
 					this.setState(
 							{
-									loading:false,
+									dataLoading:false,
 							}
 					)
 				})
@@ -146,14 +148,13 @@ export default class HeroList extends Component{
 
 			})
 		}
-		handleClickEdit=(id)=>{
-			//this.props.handleEditList(id)
-			console.log('=====================================================')
+		handleClickEdit=(editID)=>{
 			this.setState({
-				editID:id,
+				editID,
 				visible:true,
 			})
 		}
+
 		handleChangePag=(currentPage,pageSize)=>{
 			this.setState({
 				currentPage,pageSize
@@ -161,23 +162,73 @@ export default class HeroList extends Component{
 				this.fetchData()
 			})
 		}
+
+		handleEditModalOk=(e)=>{
+			//new FormBox().handleSubmit(e)
+			e.preventDefault();
+			this.refs.editDom.validateFields((err,values)=>{
+				const photolist = values.photo.map((item) => {
+						return {
+								url     : item.response,
+								thumbUrl: item.thumbUrl,
+						}
+				});
+				const params = Object.assign(values, {photolist});
+				params.id = this.state.editID;
+				this.setState({
+					confirmLoading:true
+				})
+				myAxios.post('/api/updateHeroList', params).then((data) => {
+					if(data.rs==='ok'){
+						this.setState({
+							confirmLoading:false,
+							visible:false,
+						})
+						notice('success',{msg:'提示',desc:'修改成功'})
+						//更新数据
+						this.fetchData()
+					}
+				}).catch((err) => {
+					this.setState({
+						confirmLoading:false
+					})
+				})
+			})
+		}
+		handleEditModalCancel=()=>{
+			this.setState({
+				visible:false
+			})
+		}
     render(){
-        const {dataSource,editID,currentPage,pageSize,total,loading,visible,confirmLoading} = this.state
-				console.log('render',visible)
+        const {dataSource,currentPage,pageSize,total,dataLoading,visible,editID,confirmLoading} = this.state
+
         return (
 						<div>
-							<Table loading={loading} dataSource={dataSource} columns={this.columns} pagination={false} />
+							<Table dataLoading={dataLoading} dataSource={dataSource} columns={this.columns} pagination={false} />
 							<Pagination
+								style={{marginTop:20,textAlign:'right'}}
 								defaultCurrent={currentPage}
 								current={currentPage}
 								total={total}
 								pageSize={pageSize}
+								showTotal={(total, range) => `当前第${currentPage}页/总共 ${total} 条`}
 								onChange={this.handleChangePag}
 							/>
-							<EditFormBoxModal  visible={visible} editID={editID} />
-
+							<Modal title="编辑"
+								visible={visible}
+								width={1000}
+								height={500}
+								confirmLoading={confirmLoading}
+								onOk={this.handleEditModalOk}
+								onCancel={this.handleEditModalCancel}
+								maskClosable={false}
+							>
+								<div className="edit-modal-box" style={{maxHeight:500,overflow:'auto'}}>
+									<EditFormBox ref="editDom" editID={editID} />
+								</div>
+							</Modal>
 						</div>
-
         )
     }
 }

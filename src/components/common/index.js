@@ -3,7 +3,6 @@
  */
 import SVGIcon from './SVGIcon';
 import RichEditor from './RichEditor/index';
-console.log(SVGIcon)
 export  {
     SVGIcon,
     RichEditor,

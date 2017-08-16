@@ -19,29 +19,61 @@ const RadioButton = Radio.Button;
 const RadioGroup  = Radio.Group;
 const TabPane     = Tabs.TabPane;
 
-import {myAxios,notice} from 'utils'
-import HeroList from './HeroList'
+import {myAxios,notice} from 'utils';
+import HeroList from './HeroList';
 
 class FormBox extends React.Component {
     state        = {
-        editorContent : '',
 				loading:false,
         previewVisible: false,
 				editData:{},
         previewImage  : '',
+				editID:this.props.editID,
     }
 
 		componentDidMount(){
-			this.fetchData()
+			this.fetchData(this.state.editID)
 		}
-
-		fetchData(){
+		componentWillReceiveProps(nextProps,nextState){
+			console.log(this.props,nextProps,'====================')
+			if(this.props.editID !== nextProps.editID){
+				this.fetchData(nextProps.editID)
+			}
+		}
+		fetchData(id){
         myAxios.post('/api/getHeroList',{
-					id:this.props.editID
+					id
 				}).then((data)=>{
 						if(data.rs=='ok'){
 							this.setState({
 								editData:data.data
+							})
+							const { name,
+							alias,
+							title,
+							content,
+							final,
+							rank,
+							photolist,
+							scope,
+							skill,
+							star, } = data.data
+
+							const plist = data.data.photolist || [];
+							const newPhoto = plist.length && plist.map((item,index)=>{
+								return Object.assign({},item,{uid:index,status:'done'})
+							})
+							this.props.form.setFieldsValue({
+								name,
+								alias,
+								title,
+								content,
+								final,
+								rank,
+								photo:newPhoto,
+								scope:!!scope,
+								skill:skill*1,
+								star,
 							})
 						}
         }).catch((err) => {
@@ -57,35 +89,7 @@ class FormBox extends React.Component {
         });
     }
     handleSubmit        = (e) => {
-        e.preventDefault();
-        this.props.form.validateFields((err, values) => {
-            if (!err) {
-                const photolist = values.photo.map((item) => {
-                    return {
-                        url     : item.response,
-                        thumbUrl: item.thumbUrl,
-                    }
-                });
-                const params = Object.assign(values, {photolist, content: this.state.editorContent});
-								params.id = this.props.editID;
-								this.setState({
-									loading:true
-								})
-                myAxios.post('/api/updateHeroList', params).then((data) => {
-									if(data.rs==='ok'){
-										this.setState({
-											loading:false
-										})
-										notice('success',{msg:'提示',desc:'修改成功'})
-									}
-                }).catch((err) => {
-									this.setState({
-										loading:false
-									})
-								})
-                //console.log('Received values of form: ', values);
-            }
-        });
+
     }
     normFile = (e) => {
         console.log('Upload event:', e);
@@ -95,27 +99,24 @@ class FormBox extends React.Component {
         return e && e.fileList;
     }
     getEditorContent = (content) => {
-        this.setState({
-            editorContent: content,
-        })
-        console.log(content)
+			//设置自定义表单组件的value
+				this.props.form.setFieldsValue({
+					content:content
+				})
     }
 
     render() {
         const {previewVisible, previewImage, fileList,editData,loading} = this.state
         const {getFieldDecorator}                      = this.props.form;
         const formItemLayout                           = {
-            labelCol  : {span: 2},
-            wrapperCol: {span: 22},
+            labelCol  : {span: 4},
+            wrapperCol: {span: 20},
         };
 
 				const photolist = editData.photolist || [];
-				const uploadImgs = photolist.length &&photolist.map((item,index)=>{
-					console.log('item',item)
+				const photoImgs = photolist.length && photolist.map((item,index)=>{
 					return Object.assign({},item,{uid:index,status:'done'})
 				})
-
-				console.log('uploadImgs',uploadImgs)
 
         const uploadButton = (
             <div>
@@ -123,8 +124,6 @@ class FormBox extends React.Component {
                 <div className="ant-upload-text">Upload</div>
             </div>
         );
-
-				console.log('editData',editData)
         return (
             <Form onSubmit={this.handleSubmit}>
 
@@ -134,12 +133,12 @@ class FormBox extends React.Component {
                     hasFeedback
                 >
                     {getFieldDecorator('name', {
-												initialValue:editData.name,
+												//initialValue:editData.name,
                         rules: [
                             {required: true, message: '请输入英雄大名!'},
                         ],
                     })(
-                        <Input style={{width: 240}} placeholder="如宋江"/>
+                        <Input  placeholder="如宋江"/>
                     )}
                 </FormItem>
                 <FormItem
@@ -148,12 +147,12 @@ class FormBox extends React.Component {
                     hasFeedback
                 >
                     {getFieldDecorator('star', {
-												initialValue:editData.star,
+												//initialValue:editData.star,
                         rules: [
                             {required: true, message: '请输入英雄星宿!'},
                         ],
                     })(
-                        <Input style={{width: 240}} placeholder="如天魁星!"/>
+                        <Input  placeholder="如天魁星!"/>
                     )}
                 </FormItem>
                 <FormItem
@@ -162,12 +161,12 @@ class FormBox extends React.Component {
                     hasFeedback
                 >
                     {getFieldDecorator('alias', {
-												initialValue:editData.alias,
+												//initialValue:editData.alias,
                         rules: [
                             {required: true, message: '请输入英雄诨名!'},
                         ],
                     })(
-                        <Input style={{width: 240}} placeholder="如及时雨、呼保义!"/>
+                        <Input  placeholder="如及时雨、呼保义!"/>
                     )}
                 </FormItem>
                 <FormItem
@@ -176,12 +175,12 @@ class FormBox extends React.Component {
                     hasFeedback
                 >
                     {getFieldDecorator('title', {
-												initialValue:editData.title,
+												//initialValue:editData.title,
                         rules: [
                             {required: true, message: '请输入英雄梁山泊职位!'},
                         ],
                     })(
-                        <Input style={{width: 240}} placeholder="如总兵都头领!"/>
+                        <Input  placeholder="如总兵都头领!"/>
                     )}
                 </FormItem>
                 <FormItem
@@ -189,10 +188,10 @@ class FormBox extends React.Component {
                     label="英雄结局"
                 >
                     {getFieldDecorator('final', {
-												initialValue:editData.final,
+												//initialValue:editData.final,
                         defaultValue: '1'
                     })(
-                        <Select style={{width: 240}}>
+                        <Select >
                             <Option value="1">战死</Option>
                             <Option value="2">朝廷任用</Option>
                             <Option value="3">病逝</Option>
@@ -210,8 +209,10 @@ class FormBox extends React.Component {
                     {...formItemLayout}
                     label="梁山泊排行"
                 >
-                    {getFieldDecorator('rank', {initialValue: 1,initialValue:editData.rank,})(
-                        <InputNumber style={{width: 240}} min={1} max={108}/>
+                    {getFieldDecorator('rank', {
+											//initialValue:editData.rank,
+										})(
+                        <InputNumber  min={1} max={108}/>
                     )}
                     <span className="ant-form-text"> 位</span>
                 </FormItem>
@@ -221,7 +222,9 @@ class FormBox extends React.Component {
                     label="天罡地煞"
 										initialValue={editData.scope}
                 >
-                    {getFieldDecorator('scope', {valuePropName: 'checked'})(
+                    {getFieldDecorator('scope', {
+											valuePropName: 'checked',
+										})(
                         <Switch checkedChildren="天罡" unCheckedChildren="地煞"/>
                     )}
                 </FormItem>
@@ -231,7 +234,7 @@ class FormBox extends React.Component {
                     label="功力"
                 >
                     {getFieldDecorator('skill',{
-											initialValue:editData.skill ? editData.skill*1  : 10,
+											//initialValue:editData.skill ? editData.skill*1  : 10,
 										})(
                         <Slider style={{width: 360}}
                                 marks={{0: '10', 20: '20', 40: '40', 60: '60', 80: '80', 100: '100'}}/>
@@ -243,9 +246,9 @@ class FormBox extends React.Component {
                     label="英雄头像"
                 >
                     {getFieldDecorator('photo', {
-                        valuePropName    : 'fileList',
-												initialValue:uploadImgs,
-                        getValueFromEvent: this.normFile,
+											// initialValue:photoImgs,
+											valuePropName: 'fileList',
+            					getValueFromEvent: this.normFile,
                     })(
                         <Upload name="photo" action="/api/upload/photo" listType="picture-card">
                             {uploadButton}
@@ -256,16 +259,14 @@ class FormBox extends React.Component {
                 <FormItem
                     {...formItemLayout}
                     label="英雄介绍"
+										className="field-content"
                 >
-                    {getFieldDecorator('content', {})(
-                        <RichEditor editorConetent={editData.content} getEditorContent={this.getEditorContent}/>
+                    {getFieldDecorator('content', {
+										})(
+											<div className="modal-editor-content">
+												<RichEditor className="modal-editor" editorConetent={editData.content} getEditorContent={this.getEditorContent}/>
+											</div>
                     )}
-                </FormItem>
-
-                <FormItem
-                    wrapperCol={{span: 24}}
-                >
-                    <Button loading={loading} type="primary" size="large" className="ft-submit-btn" htmlType="submit">提交</Button>
                 </FormItem>
             </Form>
         );
@@ -274,80 +275,4 @@ class FormBox extends React.Component {
 
 const EditFormBox = Form.create()(FormBox);
 
-
-
-export default class EditFormBoxModal extends Component{
-	constructor(props){
-		super(props)
-		this.state={
-			loading:false,
-			visible:props.visible,
-			editID:null,
-		}
-	}
-	componentDidMount(){
-		// console.log('diidd=================',this.props)
-		// this.setState({
-		// 	visible:this.props.visible
-		// })
-	}
-	componentWillReceiveProps(nextProps,nextState){
-		console.log('---------------------------')
-		this.setState({
-			visible:nextProps.visible,
-			editID:nextProps.editID,
-		})
-	}
-	handleOk=(e)=>{
-		//new FormBox().handleSubmit(e)
-		this.refs.editDom.validateFields((err,values)=>{
-			const photolist = values.photo.map((item) => {
-					return {
-							url     : item.response,
-							thumbUrl: item.thumbUrl,
-					}
-			});
-			const params = Object.assign(values, {photolist, content: this.state.editorContent});
-			params.id = this.props.editID;
-			this.setState({
-				loading:true
-			})
-			myAxios.post('/api/updateHeroList', params).then((data) => {
-				if(data.rs==='ok'){
-					this.setState({
-						loading:false,
-						visible:false,
-					})
-					notice('success',{msg:'提示',desc:'修改成功'})
-				}
-			}).catch((err) => {
-				this.setState({
-					loading:false
-				})
-			})
-		})
-		console.log(this.refs.editDom)
-	}
-	handleCancel=()=>{
-		this.setState({
-			visible:false
-		})
-	}
-	render(){
-		const {loading,visible,editID} = this.state
-		return (
-			<Modal title="编辑"
-				visible={visible}
-				width={1000}
-				height={500}
-				confirmLoading={loading}
-				onOk={this.handleOk}
-				onCancel={this.handleCancel}
-			>
-				<div style={{maxHeight:500,overflow:'auto'}}>
-					<EditFormBox ref="editDom" editID={editID} />
-				</div>
-			</Modal>
-		)
-	}
-};
+export default EditFormBox;

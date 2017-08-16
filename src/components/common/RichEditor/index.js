@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import classnames from 'classnames';
 import { EditorState, convertToRaw, ContentState } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 import draftToHtml from 'draftjs-to-html';
@@ -16,9 +17,8 @@ export default class RichEditor extends Component {
 
 
 		componentWillReceiveProps(nextProps){
-			console.log('nextProps',nextProps,this.props)
 			if(nextProps.editorConetent == this.props.editorConetent) return ;
-			const html = nextProps.editorConetent;
+			const html = nextProps.editorConetent || '';
 			const contentBlock = htmlToDraft(html);
 			if (contentBlock) {
 				const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
@@ -41,21 +41,20 @@ export default class RichEditor extends Component {
 
     render() {
         const { editorState } = this.state;
-
-				console.log('editorState',convertToRaw(editorState.getCurrentContent()))
+				const cls = classnames('myeditor-wrapper',this.props.className)
         return (
             <div>
                 <Editor
                     editorState={editorState}
-                    wrapperClassName="myeditor-wrapper"
+                    wrapperClassName={cls}
                     editorClassName="myeditor-editor"
                     onEditorStateChange={this.onEditorStateChange}
                 />
-                <textarea
+                {/* <textarea
                     style={{width:'100%'}}
                     disabled
                     value={draftToHtml(convertToRaw(editorState.getCurrentContent()))}
-                />
+                /> */}
 
             </div>
         );
