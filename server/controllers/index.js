@@ -23,6 +23,9 @@ export default (app)=>{
   app.post('/api/getHeroList', Hero.getHeroList);
 	app.post('/api/deleteHeroList', Hero.deleteHeroList);
 	app.post('/api/updateHeroList', Hero.updateHeroList);
+	app.post('/api/getMusicList', Hero.getMusicList);
+	app.post('/api/uploadMusic', Hero.uploadMusic);
+	app.post('/api/removeMusic', Hero.removeMusic);
 
 }
 

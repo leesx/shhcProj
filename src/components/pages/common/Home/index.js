@@ -1,6 +1,6 @@
 /*
- * @Author: leesx 
- * @Date: 2017-07-06 14:07:23 
+ * @Author: leesx
+ * @Date: 2017-07-06 14:07:23
  * @Last Modified by: leesx
  * @Last Modified time: 2017-07-06 17:09:13
  */
@@ -13,10 +13,22 @@ export default function Home(props) {
     return (
         <div className="home-page">
             <div className="home-hd">
-                <h4>北京动物园</h4>
+                <h4>水泊梁山</h4>
             </div>
             <div className="home-bd">
-                <div className="icon-lists">
+								<img className="bind-wm" src={require("assets/img/shhc_01.jpg")}/>
+							<div>
+								<p>只怕自从你走后，铁狮子一哭会生锈。</p>
+								<p>夜风吹透小轩窗，星星月亮全变瘦。</p>
+								<p>只怕自从你走后，心里肚里太难受。</p>
+								<p>牵挂月月又年年，无眠半宿又一宿。</p>
+								<p>何日再相逢？哪天再聚首？</p>
+								<p>当面诉别情，花间一壶酒。</p>
+								<p>喜鹊连声叫，黄狗轻声吼。</p>
+								<p>古桥新流水，蓝天大日头。</p>
+							</div>
+
+                {/* <div className="icon-lists">
                     <SVGIcon icon="#icon-ciwei"/>
                     <SVGIcon icon="#icon-xiaoji"/>
                     <SVGIcon icon="#icon-huli"/>
@@ -29,34 +41,9 @@ export default function Home(props) {
                     <SVGIcon icon="#icon-hema"/>
                     <SVGIcon icon="#icon-pangxie"/>
                     <SVGIcon icon="#icon-xiongmao"/>
-                </div>
+                </div> */}
             </div>
-            <div className="home-hd">
-                <h4>外卖动物园</h4>
-            </div>
-            <div className="home-bd">
-                <ul className="waimai-logo clearfix">
-                    <li>
-                        <Link>
-                            <img className="bind-wm" src={require("assets/img/waimai_homepage_image_meituan.png")}/>
-                        </Link>
-                        <h4>美团</h4>
-                    </li>
-                    <li>
-                        <Link>
-                            <img className="bind-wm" src={require("assets/img/waimai_homepage_image_eleme.png")}/>
-                        </Link>
-                        <h4>饿了么</h4>
-                    </li>
-                    <li>
-                        <Link>
-                            <img className="bind-wm" src={require('assets/img/waimai_homepage_image_baidu.png')}/>
-                        </Link>
-                        <h4>百度</h4>
-                    </li>
 
-                </ul>
-            </div>
         </div>
     )
 }
