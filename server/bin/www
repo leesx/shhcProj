@@ -3,7 +3,7 @@
 /**
  * Module dependencies.
  */
-//require("babel-core/register");
+require("babel-core/register");
 import app from '../app';
 import debug from 'debug'
 import http from 'http';
