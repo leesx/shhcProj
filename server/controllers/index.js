@@ -6,7 +6,9 @@ export default (app)=>{
   // pre handle user
   app.get('*',function(req, res, next) {
 		try{
-			const html = process.env.NODE_ENV === 'development' ? renderHtml() : fs.readFileSync(path.join(__dirname,'../../dist/index.html'))
+			const html = process.env.NODE_ENV === 'development'
+			? renderHtml()
+			: fs.readFileSync(path.join(__dirname,'../../dist/index.html'));
 
 			res.render('index',{html})
 		}catch(err){
@@ -21,7 +23,7 @@ export default (app)=>{
   app.post('/api/insertHeroInfo', Hero.insertHeroInfo);
 
   app.post('/api/getHeroList', Hero.getHeroList);
-	app.post('/api/deleteHeroList', Hero.deleteHeroList);
+	app.delete('/api/:id', Hero.deleteHeroList);
 	app.post('/api/updateHeroList', Hero.updateHeroList);
 	app.post('/api/getMusicList', Hero.getMusicList);
 	app.post('/api/uploadMusic', Hero.uploadMusic);

@@ -3,7 +3,7 @@
  */
 
 import React,{Component} from 'react';
-import {Table,Button,Popconfirm,Pagination,Modal} from 'antd';
+import {Table,Button,Popconfirm,Pagination,Modal,message} from 'antd';
 import {myAxios,notice} from 'utils';
 
 import EditFormBox from './Edit'
@@ -134,9 +134,7 @@ export default class HeroList extends Component{
 				})
     }
 		handleClickDelete=(index,id)=>{
-			myAxios.post('/api/deleteHeroList',{
-				id,
-			}).then((data)=>{
+			myAxios.delete('/api/'+id).then((data)=>{
 					if(data.rs === 'ok'){
 						const {dataSource} = this.state
 						dataSource.splice(index,1)
