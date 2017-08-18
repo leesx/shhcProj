@@ -203,7 +203,7 @@ export default class HeroList extends Component{
 
         return (
 						<div>
-							<Table dataLoading={dataLoading} dataSource={dataSource} columns={this.columns} pagination={false} />
+							<Table loading={dataLoading} dataSource={dataSource} columns={this.columns} pagination={false} />
 							<Pagination
 								style={{marginTop:20,textAlign:'right'}}
 								defaultCurrent={currentPage}

@@ -1,0 +1,16 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	0	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+cleanHTMLTag	D:\Home_PROJ\react-qs\src\components\pages\HeroInfoManage\HeroList.js	/^function cleanHTMLTag(str=''){$/;"	function	line:11
+setColumns	D:\Home_PROJ\react-qs\src\components\pages\HeroInfoManage\HeroList.js	/^function setColumns(that){$/;"	function	line:16
+render	D:\Home_PROJ\react-qs\src\components\pages\HeroInfoManage\HeroList.js	/^			render(text,record){$/;"	function	line:21
+setColumns	D:\Home_PROJ\react-qs\src\components\pages\HeroInfoManage\HeroList.js	/^function setColumns(that){$/;"	function	line:16
+render	D:\Home_PROJ\react-qs\src\components\pages\HeroInfoManage\HeroList.js	/^			render(text){$/;"	function	line:46
+render	D:\Home_PROJ\react-qs\src\components\pages\HeroInfoManage\HeroList.js	/^			render(text){$/;"	function	line:62
+constructor	D:\Home_PROJ\react-qs\src\components\pages\HeroInfoManage\HeroList.js	/^		constructor(props){$/;"	function	line:85
+export.state.dataSource	D:\Home_PROJ\react-qs\src\components\pages\HeroInfoManage\HeroList.js	/^	        dataSource:[],$/;"	property	line:88
+componentDidMount	D:\Home_PROJ\react-qs\src\components\pages\HeroInfoManage\HeroList.js	/^    componentDidMount(){$/;"	function	line:99
+render	D:\Home_PROJ\react-qs\src\components\pages\HeroInfoManage\HeroList.js	/^    render(){$/;"	function	line:201
