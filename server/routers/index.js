@@ -1,8 +1,8 @@
-import * as Hero from './hero';
-import fs from 'fs';
-import path from 'path';
+const Hero=require('./hero') ;
+const fs=require('fs');
+const path=require('path');
 
-export default (app)=>{
+module.exports=(app)=>{
   // pre handle user
   app.get('*',function(req, res, next) {
 		try{

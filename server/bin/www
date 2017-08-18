@@ -3,10 +3,10 @@
 /**
  * Module dependencies.
  */
-require("babel-core/register");
-import app from '../app';
-import debug from 'debug'
-import http from 'http';
+//require("babel-core/register");
+const app = require('../app') ;
+const debug= require('debug')
+const http=require('http');
 
 
 const serverDebug = debug('shuihuhuace:server');

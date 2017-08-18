@@ -1,13 +1,13 @@
-import express from 'express';
-import path from 'path';
-import favicon from 'serve-favicon';
-import logger from 'morgan';
-import session from 'express-session';
-import flash from 'connect-flash';
-import cookieParser from 'cookie-parser';
-import bodyParser from 'body-parser';
-import Controllers from './controllers'
-import {sessionConfig} from './config/session' ;
+const express=require('express');
+const path=require('path');
+const favicon=require('serve-favicon');
+const logger=require('morgan');
+const session=require('express-session');
+const flash=require('connect-flash');
+const cookieParser=require('cookie-parser');
+const bodyParser=require('body-parser');
+const Routers=require('./routers');
+const {sessionConfig}=require('./config/session') ;
 const MongoStore = require('connect-mongo')(session);
 
 
@@ -60,7 +60,7 @@ app.use(function (req, res, next) {
 
 
 
-Controllers(app)
+Routers(app)
 
 
 

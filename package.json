@@ -4,16 +4,15 @@
   "description": "In the YunPad project using the react technology stack.",
   "main": "index.js",
   "scripts": {
-    "server:dev": "cross-env BABEL_ENV=development NODE_ENV=development nodemon ./server/bin/www --exec babel-node  --presets es2015,stage-0",
-    "server:prod": "cross-env BABEL_ENV=production NODE_ENV=production babel-node ./server/bin/www",
+    "server:dev": "cross-env  NODE_ENV=development nodemon ./server/bin/www",
+    "server:prod": "cross-env  NODE_ENV=production node ./server/bin/www",
     "dll:dev": "cross-env NODE_ENV=development webpack --config webpack.config.dll.js",
     "dll:prod": "cross-env NODE_ENV=production webpack --config webpack.config.dll.js",
     "dll": "npm run dll:dev && npm run dll:prod",
     "mock:online": "nodemon server.js",
     "debug": "cross-env NODE_ENV=development  webpack-dev-server --progress --inline --hot  --colors --config webpack.config.dev.js",
     "build": "cross-env NODE_ENV=production BABEL_ENV=production webpack --config webpack.config.prod.js --colors --progress && echo '前端程序：编译完成'",
-    "build:server": "cross-env BABEL_ENV=prodnode BABEL_DISABLE_CACHE=1 babel server -d bin --ignore client && echo '后端程序：编译完成(其实不是后端程序，就是用bable把jsx和es6编译成浏览器能识别的代码)'",
-    "deploy:prod": "cross-env BABEL_ENV=production NODE_ENV=production pm2 start process.json",
+    "deploy:prod": "cross-env  NODE_ENV=production pm2 start process.json",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [

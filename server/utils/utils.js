@@ -1,7 +1,7 @@
-import moment from 'moment';
+const moment=require('moment') ;
 moment.locale('zh-CN');
 
-export const getFormatTime = (timestamp)=>{
+exports.getFormatTime = (timestamp)=>{
   let time = null
   const now = Date.now()
 

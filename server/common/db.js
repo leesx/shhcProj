@@ -1,6 +1,8 @@
 //var db = require('mongoskin').db('mongodb://10.10.3.188:27017/blog');
 //var db = require('mongoskin').db('mongodb://127.0.0.1:27017/blog');
-import mongoskin from 'mongoskin'
+const mongoskin= require('mongoskin');
 
-export const db = mongoskin.db('mongodb://127.0.0.1:27017/db_shhc');
-export const ObjectID = mongoskin.ObjectID
+module.exports={
+	db : mongoskin.db('mongodb://127.0.0.1:27017/db_shhc'),
+	ObjectID : mongoskin.ObjectID,
+};

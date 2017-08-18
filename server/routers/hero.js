@@ -1,13 +1,13 @@
-import fs from 'fs';
-import path from 'path';
-import formidable from 'formidable';
+const fs =require('fs');
+const path =require('path');
+const formidable =require('formidable');
 
-import {db, ObjectID}  from './../common/db';
-import {getFormatTime} from './../utils/utils';
-import moment from 'moment'
+const {db, ObjectID}  =require('./../common/db');
+const {getFormatTime} =require('./../utils/utils');
+const moment =require('moment')
 
 const Heroes = db.collection('heroes');
-export const getHeroList = (req, res, next) => {
+exports.getHeroList = (req, res, next) => {
     const {currentPage=0,pageSize=5} = req.body
     //编辑
 		if(req.body.id){
@@ -35,7 +35,7 @@ export const getHeroList = (req, res, next) => {
 
 }
 
-export const deleteHeroList = (req, res, next) => {
+exports.deleteHeroList = (req, res, next) => {
 
 		const id = req.params.id
     Heroes.remove({_id: ObjectID(id)}, (err, result) => {
@@ -49,7 +49,7 @@ export const deleteHeroList = (req, res, next) => {
 
 
 
-export const updateHeroList = (req, res, next) => {
+exports.updateHeroList = (req, res, next) => {
     const {id,name,alias,title, content, final, rank, photolist, scope, skill, star} = req.body
     Heroes.update({_id: ObjectID(id)}, {
             $set: {
@@ -70,7 +70,7 @@ export const updateHeroList = (req, res, next) => {
         });
 }
 
-export const insertHeroInfo = (req, res, next) => {
+exports.insertHeroInfo = (req, res, next) => {
     // POST 请求在req.body中取值
     //GET 请求在req.params中取值
     const {name,alias,title, content, final, rank, photolist, scope, skill, star} = req.body
@@ -93,7 +93,7 @@ export const insertHeroInfo = (req, res, next) => {
     });
 }
 
-export const uploadPhoto = (req, res, next) => {
+exports.uploadPhoto = (req, res, next) => {
     var form = new formidable.IncomingForm();
 
     form.parse(req, (err, fields, files) => {
@@ -112,7 +112,7 @@ export const uploadPhoto = (req, res, next) => {
     })
 }
 
-export const getMusicList = (req,res,next) =>{
+exports.getMusicList = (req,res,next) =>{
 	db.collection('music').find({}).toArray((err,result)=>{
 		if(err) throw err;
 		res.send({
@@ -122,7 +122,7 @@ export const getMusicList = (req,res,next) =>{
 		})
 	})
 }
-export const uploadMusic = (req, res, next) => {
+exports.uploadMusic = (req, res, next) => {
     const form = new formidable.IncomingForm();
 
     form.parse(req, (err, fields, files) => {
@@ -183,7 +183,7 @@ export const uploadMusic = (req, res, next) => {
 
 }
 
-export const removeMusic = (req, res, next) => {
+exports.removeMusic = (req, res, next) => {
 		const {id,url} = req.body
     db.collection('music')
         .remove({_id: ObjectID(id)}, (err, result) => {
