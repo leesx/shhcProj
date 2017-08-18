@@ -12,7 +12,7 @@
     "mock:online": "nodemon server.js",
     "debug": "cross-env NODE_ENV=development  webpack-dev-server --progress --inline --hot  --colors --config webpack.config.dev.js",
     "build": "cross-env NODE_ENV=production BABEL_ENV=production webpack --config webpack.config.prod.js --colors --progress && echo '前端程序：编译完成'",
-	  "build:server": "cross-env BABEL_ENV=prodnode BABEL_DISABLE_CACHE=1 babel server -d bin --ignore client && echo '后端程序：编译完成(其实不是后端程序，就是用bable把jsx和es6编译成浏览器能识别的代码)'",
+    "build:server": "cross-env BABEL_ENV=prodnode BABEL_DISABLE_CACHE=1 babel server -d bin --ignore client && echo '后端程序：编译完成(其实不是后端程序，就是用bable把jsx和es6编译成浏览器能识别的代码)'",
     "deploy:prod": "cross-env BABEL_ENV=production NODE_ENV=production pm2 start process.json",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -40,6 +40,7 @@
     "babel-plugin-add-module-exports": "^0.1.4",
     "babel-plugin-antd": "^0.4.0",
     "babel-plugin-import": "^1.1.1",
+    "babel-plugin-react-transform": "^2.0.2",
     "babel-plugin-transform-decorators": "^6.24.1",
     "babel-plugin-transform-decorators-legacy": "^1.3.4",
     "babel-plugin-transform-es2015-modules-umd": "^6.24.1",
@@ -107,6 +108,7 @@
     "babel-plugin-transform-flow-strip-types": "^6.22.0",
     "babel-plugin-transform-require-ignore": "0.0.2",
     "babel-runtime": "^6.23.0",
+    "connect-mongo": "^1.3.2",
     "core-decorators": "^0.15.0",
     "draft-js": "^0.10.1",
     "draftjs-to-html": "^0.7.4",
@@ -115,8 +117,10 @@
     "ejs": "^2.5.7",
     "element-resize-event": "^2.0.5",
     "es6-promise": "^3.1.2",
+    "express-session": "^1.15.5",
     "fastclick": "^1.0.6",
     "form-data": "^1.0.0-rc4",
+    "formidable": "^1.1.1",
     "hmacsha1": "^1.0.0",
     "html-to-draftjs": "0.1.0-beta14",
     "immutable": "^3.8.1",
@@ -125,7 +129,8 @@
     "koa": "^2.2.0",
     "koa-body": "^2.3.0",
     "moment": "^2.12.0",
-    "morgan": "^1.8.1",
+    "mongodb": "^2.2.31",
+    "morgan": "^1.8.2",
     "normalizr": "^2.0.0",
     "pure-render-decorator": "^1.2.1",
     "pure-render-immutable-decorator": "^1.0.3",
@@ -147,6 +152,7 @@
     "redux": "^3.5.2",
     "redux-logger": "^2.6.1",
     "redux-thunk": "^2.2.0",
+    "serve-favicon": "^2.4.3",
     "weui": "^1.1.0"
   }
 }
